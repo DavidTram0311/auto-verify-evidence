@@ -48,13 +48,13 @@ def predicted(df,model):
 
                 # Do not accept awb and weighing platform of confident interval of awb and weighing
                 # platform less than 64% and 70% respectively.
-                if box.conf > float(0.64) and int(cls) == 0:
+                if box.conf > float(0.26) and int(cls) == 0:
                     n.append(int(cls))
 
-                elif box.conf > float(0.70) and int(cls) == 2:
+                elif box.conf > float(0.29) and int(cls) == 2:
                     n.append(int(cls))
 
-                elif box.conf > float(0.70) and int(cls) == 3:
+                elif box.conf > float(0.29) and int(cls) == 3:
                     n.append(int(cls))
 
                 elif box.conf > float(0.50) and int(cls) == 1:
