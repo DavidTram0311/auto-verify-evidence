@@ -71,8 +71,11 @@ def predicted(df,model):
             elif n == [1]:
                 reason.append('strange stuffs on weighing platform')
 
-            else:
+            elif n == [2] or n == [3]:
                 reason.append('no awb')
+                
+            else:
+                reason.append('')
 
             if unique(n) == [0, 2] or unique(n) == [0, 3]:
                 predicted_value.append('pass')
@@ -85,7 +88,7 @@ def predicted(df,model):
         
         ids.append(df['TID'][i])
     
-    cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason)),
-                    columns=['TID', 'Picture', 'Predicted value', 'Fail reason']) 
+    cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, conf_interval_before)),
+                    columns=['TID', 'Picture', 'Predicted value', 'Fail reason', 'confident interval']) 
     
     return cm
