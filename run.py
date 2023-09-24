@@ -57,6 +57,9 @@ def predicted(df,model):
                 elif box.conf > float(0.70) and int(cls) == 3:
                     n.append(int(cls))
 
+                elif box.conf > float(0.50) and int(cls) == 1:
+                    n.append(int(cls))
+
 
             # Check valid or invalid
             if n == [0]:
