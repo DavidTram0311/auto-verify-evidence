@@ -1,10 +1,10 @@
 import ultralytics
 from ultralytics import YOLO
-from PIL import Image
+from PIL import Image, ImageFile
 import requests
 from io import BytesIO
 import pandas as pd
-Image.LOAD_TRUNCATED_IMAGES = True
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 # v4: 0: 'awb', 1: 'awb-njv', 2: 'weighing-platform-bulky', 3: 'weighing-platform-small'
 def unique(numbers):
