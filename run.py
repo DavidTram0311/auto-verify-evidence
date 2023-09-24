@@ -23,7 +23,7 @@ def predicted(df,model):
     predicted_value = []
     conf_interval_before = []
     picture = []
-
+    class_pred = []
     reason = []
 
     for i in range(len(df)):
@@ -34,6 +34,9 @@ def predicted(df,model):
         source = Image.open(BytesIO(response.content))
         results = model(source)
         n = []
+        
+        class_pred.append(results[0].boxes.cls)
+        conf_interval_before.append(results[0].boxes.conf)
 
         if str(results[0].boxes.cls) == 'tensor([])':
             predicted_value.append('fail')
@@ -42,15 +45,6 @@ def predicted(df,model):
         else:
             for box in results[0].boxes:
                 cls = box.cls
-
-                if int(cls) == 0:
-                    conf_interval_before.append(f'awb: {box.conf}')
-                elif int(cls) == 1:
-                    conf_interval_before.append(f'awb-njv: {box.conf}')
-                elif int(cls) == 2:
-                    conf_interval_before.append(f'small-platform: {box.conf}')
-                else:
-                    conf_interval_before.append(f'bulky-platform: {box.conf}')
 
                 # Do not accept awb and weighing platform of confident interval of awb and weighing
                 # platform less than 64% and 70% respectively.
@@ -88,7 +82,7 @@ def predicted(df,model):
         
         ids.append(df['TID'][i])
     
-    cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, conf_interval_before)),
-                    columns=['TID', 'Picture', 'Predicted value', 'Fail reason', 'confident interval']) 
+    cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, class_pred, conf_interval_before)),
+                    columns=['TID', 'Picture', 'Predicted value', 'Fail reason', 'class', 'confident interval']) 
     
     return cm
