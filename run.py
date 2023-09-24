@@ -4,6 +4,7 @@ from PIL import Image
 import requests
 from io import BytesIO
 import pandas as pd
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 # v4: 0: 'awb', 1: 'awb-njv', 2: 'weighing-platform-bulky', 3: 'weighing-platform-small'
 def unique(numbers):
