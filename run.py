@@ -100,7 +100,7 @@ def predicted(df,model4, model5):
             if unique(n) == [0, 2] or unique(n) == [0, 3]:
                 predicted_value.append('pass')
 
-            elif unique(n) == [1, 2] and unique(n) == [1, 3]: #small
+            elif unique(n) == [1, 2] or unique(n) == [1, 3]: #small
                 predicted_value.append('pass')
 
             else:
