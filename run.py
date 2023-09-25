@@ -18,12 +18,15 @@ def unique(numbers):
 
     return list_of_unique_numbers
 
-def predicted(df,model):
+def predicted(df,model4, model5):
     ids = []
     predicted_value = []
-    conf_interval_before = []
+    conf_interval_before4 = []
+    conf_interval_before5 = []
+    class_pred4 = []
+    class_pred5 = []
     picture = []
-    class_pred = []
+
     reason = []
 
     for i in range(len(df)):
@@ -32,18 +35,21 @@ def predicted(df,model):
         picture.append(url)
         response = requests.get(url)
         source = Image.open(BytesIO(response.content))
-        results = model(source)
+        results4 = model4(source)
+        results5 = model5(source)
         n = []
-        
-        class_pred.append(results[0].boxes.cls)
-        conf_interval_before.append(results[0].boxes.conf)
 
-        if str(results[0].boxes.cls) == 'tensor([])':
+        class_pred4.append(results4[0].boxes.cls)
+        class_pred5.append(results5[0].boxes.cls)
+        conf_interval_before4.append(results4[0].boxes.conf)
+        conf_interval_before5.append(results5[0].boxes.conf)
+
+        if str(results4[0].boxes.cls) == 'tensor([])':
             predicted_value.append('fail')
             reason.append('no awb or strange stuff on weighing platform')
     
         else:
-            for box in results[0].boxes:
+            for box in results4[0].boxes:
                 cls = box.cls
 
                 # Do not accept awb and weighing platform of confident interval of awb and weighing
@@ -56,21 +62,38 @@ def predicted(df,model):
 
                 elif box.conf > float(0.29) and int(cls) == 3:
                     n.append(int(cls))
+                
+                elif box.conf > float(0.50) and int(cls) == 1:
+                    n.append(int(cls))
+            
+            for box in results5[0].boxes:
+                cls = box.cls
 
+                # Do not accept awb and weighing platform of confident interval of awb and weighing
+                # platform less than 64% and 70% respectively.
+                if box.conf > float(0.26) and int(cls) == 0:
+                    n.append(int(cls))
+
+                elif box.conf > float(0.29) and int(cls) == 2:
+                    n.append(int(cls))
+
+                elif box.conf > float(0.29) and int(cls) == 3:
+                    n.append(int(cls))
+                
                 elif box.conf > float(0.50) and int(cls) == 1:
                     n.append(int(cls))
 
 
             # Check valid or invalid
-            if n == [0]:
+            if unique(n) == [0]:
                 reason.append('strange stuffs on weighing platform')
 
-            elif n == [1]:
+            elif unique(n) == [1]:
                 reason.append('strange stuffs on weighing platform')
 
-            elif n == [2] or n == [3]:
+            elif unique(n) == [2] or unique(n) == [3]:
                 reason.append('no awb')
-                
+
             else:
                 reason.append('')
 
@@ -85,7 +108,7 @@ def predicted(df,model):
         
         ids.append(df['TID'][i])
     
-    cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, class_pred, conf_interval_before)),
-                    columns=['TID', 'Picture', 'Predicted value', 'Fail reason', 'class', 'confident interval']) 
-    
+    cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, class_pred4, conf_interval_before4, class_pred5, conf_interval_before5)),
+                    columns=['TID', 'Picture', 'Predicted value', 'Fail reason', 'class_1st_model', 'confident-interval_1st_model', 'class_2nd_model', 'confident-interval_2nd_model']) 
+
     return cm
