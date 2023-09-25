@@ -46,7 +46,7 @@ def predicted(df,model4, model5):
 
         if str(results4[0].boxes.cls) == 'tensor([])':
             predicted_value.append('fail')
-            reason.append('no awb or strange stuff on weighing platform')
+            reason.append('no awb/strange stuff')
     
         else:
             for box in results4[0].boxes:
@@ -86,10 +86,10 @@ def predicted(df,model4, model5):
 
             # Check valid or invalid
             if unique(n) == [0]:
-                reason.append('strange stuffs on weighing platform')
+                reason.append('strange stuffs')
 
             elif unique(n) == [1]:
-                reason.append('strange stuffs on weighing platform')
+                reason.append('strange stuffs')
 
             elif unique(n) == [2] or unique(n) == [3]:
                 reason.append('no awb')
