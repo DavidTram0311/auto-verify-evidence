@@ -57,10 +57,10 @@ def predicted(df,model4, model5):
                 if box.conf > float(0.26) and int(cls) == 0:
                     n.append(int(cls))
 
-                elif box.conf > float(0.29) and int(cls) == 2:
+                elif box.conf > float(0.35) and int(cls) == 2:
                     n.append(int(cls))
 
-                elif box.conf > float(0.29) and int(cls) == 3:
+                elif box.conf > float(0.35) and int(cls) == 3:
                     n.append(int(cls))
                 
                 elif box.conf > float(0.50) and int(cls) == 1:
@@ -74,10 +74,10 @@ def predicted(df,model4, model5):
                 if box.conf > float(0.26) and int(cls) == 0:
                     n.append(int(cls))
 
-                elif box.conf > float(0.29) and int(cls) == 2:
+                elif box.conf > float(0.35) and int(cls) == 2:
                     n.append(int(cls))
 
-                elif box.conf > float(0.29) and int(cls) == 3:
+                elif box.conf > float(0.35) and int(cls) == 3:
                     n.append(int(cls))
                 
                 elif box.conf > float(0.50) and int(cls) == 1:
