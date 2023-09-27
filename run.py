@@ -149,8 +149,9 @@ def predicted_npsp(folder_pth, model):
 
             # Predict Fail or Pass
             if str(results[0].boxes.cls) == 'tensor([])':
-                predicted_value.append('fail')
                 reason.append('error/invisible')
+                predicted_value.append('fail')
+                
 
             else:
                 for box in results[0].boxes:
