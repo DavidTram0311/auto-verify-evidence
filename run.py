@@ -26,7 +26,6 @@ def predicted(df,model3):
     reason = []
 
     for i in range(len(df)):
-
         time.sleep(2)
         count = count + 1
         print(count)
@@ -106,11 +105,11 @@ def predicted(df,model3):
                     ci_platform.append(model4_dict[2])
         
         ids.append(df.iloc[i,0])
-
+    # Create a dataframe
     cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
                 columns=['TID', 'Picture', 'Predicted Value', 'Fail Reason', 'AWB', 'CI of AWB', 
                          'Weighing Platform', 'CI of Weighing Platform']) 
-
+# Recommend function
 def recommend(pred, ci_awb, platform, ci_platform):
     if pred == 'pass':
         if ci_awb < float(0.60):
