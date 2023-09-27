@@ -111,11 +111,103 @@ def predicted_lzd(df,model3):
                          'Weighing Platform', 'CI of Weighing Platform'])
     return cm
 
-def recommend(pred, ci_awb, platform, ci_platform):
+def recommend_lzd(pred, ci_awb, platform, ci_platform):
     if pred == 'pass':
         if ci_awb < float(0.60):
             return 1
         elif platform == 1 and ci_platform < float(0.956):
+            return 1
+        else:
+            return 0
+    
+    elif pred == 'fail':
+        return 1
+
+#-----------------------------------------------------------------------------------------------------#
+# Non - partnership
+def predicted_npsp(folder_pth, model):
+    platform = [] 
+    orders = []
+    ci_platform = []
+    ids = []
+    predicted_value = []
+    reason = []
+    for i in os.listdir(folder_pth):
+        id_path = f'{folder_pth}/{i}'
+        print(id_path)
+
+        for j in os.listdir(id_path):
+            name = j.split('.')[0]
+            length = len(name.split('_'))
+            id = name.split('_')[0]
+            print(id)
+            order = name.split('_')[length-1]
+            source = f'{id_path}/{j}'
+            results = model(source)
+            cls4 = []
+            ci_cls4 = []
+
+            # Predict Fail or Pass
+            if str(results[0].boxes.cls) == 'tensor([])':
+                predicted_value.append('fail')
+                reason.append('error/invisible')
+
+            else:
+                for box in results[0].boxes:
+                    cls = box.cls
+                    ci = box.conf
+                # Do not accept awb and weighing platform of confident interval of awb and weighing
+                # platform less than 64% and 70% respectively.
+                    cls4.append(int(cls))
+                    ci_cls4.append(float(ci))
+
+                if function.unique(cls4) == [0]:
+                    reason.append('strange stuffs')
+                elif function.unique(cls4) == [1]:
+                    reason.append('strange stuffs')
+                else:
+                    reason.append('')
+
+                if function.unique(cls4) == [0, 2] or function.unique(cls4) == [0, 3]:
+                    predicted_value.append('pass')
+
+                elif function.unique(cls4) == [2] or function.unique(cls4) == [3]:
+                    predicted_value.append('pass')
+
+                else:
+                    predicted_value.append('fail')
+
+                # Input class and confident interval
+
+            model4_dict = function.m_dict_5(cls4, ci_cls4)
+            model4_dict = function.transform_dict_5(model4_dict)
+            print(model4_dict)
+
+
+            if model4_dict[2] > float(0) or model4_dict[3] > float(0):
+                platform.append(1)
+                if model4_dict[2] > float(0):
+                    ci_platform.append(model4_dict[2])
+                elif model4_dict[3] > float(0):
+                    ci_platform.append(model4_dict[3])
+            else:
+                platform.append(0)
+                ci_platform.append(0.0)
+            ids.append(id)
+            orders.append(order)
+            
+            print(ids)
+            print(predicted_value)
+            print(orders)
+
+    cm = pd.DataFrame(list(zip(ids, orders, predicted_value, reason, platform, ci_platform)),
+            columns=['TID', 'Photo ID', 'Predicted Value', 'Fail Reason', 
+                    'Weighing Platform', 'CI of Weighing Platform'])
+    return cm
+
+def recommend_npsp(pred, platform, ci_platform):
+    if pred == 'pass':
+        if platform == 1 and ci_platform < float(0.948):
             return 1
         else:
             return 0
