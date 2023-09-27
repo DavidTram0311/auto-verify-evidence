@@ -24,7 +24,7 @@ def predicted(df,model3):
     predicted_value = []
     picture = []
     reason = []
-
+    count = 0
     for i in range(len(df)):
         time.sleep(2)
         count = count + 1
