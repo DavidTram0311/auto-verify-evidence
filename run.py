@@ -181,7 +181,6 @@ def predicted_npsp(folder_pth, model):
 
             model4_dict = function.m_dict_5(cls4, ci_cls4)
             model4_dict = function.transform_dict_5(model4_dict)
-            print(model4_dict)
 
 
             if model4_dict[2] > float(0) or model4_dict[3] > float(0):
@@ -196,9 +195,6 @@ def predicted_npsp(folder_pth, model):
             ids.append(id)
             orders.append(order)
             
-            print(ids)
-            print(predicted_value)
-            print(orders)
 
     cm = pd.DataFrame(list(zip(ids, orders, predicted_value, reason, platform, ci_platform)),
             columns=['TID', 'Photo ID', 'Predicted Value', 'Fail Reason', 
