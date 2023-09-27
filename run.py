@@ -93,19 +93,19 @@ def predicted(df,model3):
             awb.append(0)
             ci_awb.append(model4_dict[0])
 
-        if model4_dict[1] > float(0):
+        if model4_dict[1] > float(0) or model4_dict[2] > float(0):
             platform.append(1)
-            ci_platform.append(model4_dict[1])
+            if model4_dict[1] > float(0):
+                ci_platform.append(model4_dict[1])
+            elif model4_dict[2] > float(0):
+                ci_platform.append(model4_dict[1])
         else:
             platform.append(0)
-            ci_platform.append(model4_dict[1])
+            ci_platform.append(0.0)
 
-        if model4_dict[2] > float(0):
-            platform.append(1)
-            ci_platform.append(model4_dict[2])
-        else:
-            platform.append(0)
-            ci_platform.append(model4_dict[2])
+        print(platform)
+        print(ci_platform)
+
         
         ids.append(df.iloc[i,0])
 
