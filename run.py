@@ -11,7 +11,7 @@ pd.options.display.max_columns = 21
 
 # v3: 0: 'awb', 1: 'awb-njv', 2: 'weighing-platform-bulky', 3: 'weighing-platform-small'
 
-def predicted(df,model3):
+def predicted_lzd(df,model3):
     awb = []
     ci_awb = []
     platform = []
