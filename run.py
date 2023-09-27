@@ -6,6 +6,7 @@ from io import BytesIO
 import pandas as pd
 import time
 import functions
+import os
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 pd.options.display.max_columns = 21
 
