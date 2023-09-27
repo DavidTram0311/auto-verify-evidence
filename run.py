@@ -140,7 +140,6 @@ def predicted_npsp(folder_pth, model):
             name = j.split('.')[0]
             length = len(name.split('_'))
             id = name.split('_')[0]
-            print(id)
             order = name.split('_')[length-1]
             source = f'{id_path}/{j}'
             results = model(source)
