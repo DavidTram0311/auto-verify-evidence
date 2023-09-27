@@ -31,9 +31,9 @@ def predicted_lzd(df,model3):
             print(count)
             functions.stop(count)
             url = df.iloc[i,1]
-            url = f'http://{url}'
+            url = f'https://{url}'
             picture.append(url)
-            response = requests.get(url, timeout=30)
+            response = requests.get(url, verify=False, timeout=30)
             source = Image.open(BytesIO(response.content))
             results = model3(source)
             # results5 = model5(source)
