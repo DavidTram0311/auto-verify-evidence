@@ -83,7 +83,7 @@ def predicted(df,model3):
                 
         model4_dict = functions.m_dict_3(cls4, ci_cls4)
         model4_dict = functions.transform_dict_3(model4_dict)
-        print(model4_dict)
+
 
                 
         if model4_dict[0] > float(0):
@@ -102,9 +102,6 @@ def predicted(df,model3):
         else:
             platform.append(0)
             ci_platform.append(0.0)
-
-        print(platform)
-        print(ci_platform)
 
         
         ids.append(df.iloc[i,0])
