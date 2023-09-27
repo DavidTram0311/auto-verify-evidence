@@ -194,7 +194,7 @@ def predicted_npsp(folder_pth, model):
                 ci_platform.append(0.0)
             ids.append(id)
             orders.append(order)
-            
+            print(reason)
 
     cm = pd.DataFrame(list(zip(ids, orders, predicted_value, reason, platform, ci_platform)),
             columns=['TID', 'Photo ID', 'Predicted Value', 'Fail Reason', 
