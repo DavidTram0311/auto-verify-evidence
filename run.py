@@ -26,7 +26,7 @@ def predicted_lzd(df,model3):
     try:
         for i in range(len(df)):
     
-            time.sleep(2)
+            time.sleep(1)
             count = count + 1
             print(count)
             functions.stop(count)
