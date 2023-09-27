@@ -17,100 +17,107 @@ def predicted_lzd(df,model3):
     ci_awb = []
     platform = []
     ci_platform = []
-    small = [] 
-    ci_small = []
-    bulky = []
-    ci_bulky = []
     ids = []
     predicted_value = []
     picture = []
     reason = []
     count = 0
 
-    for i in range(len(df)):
-
-        time.sleep(2)
-        count = count + 1
-        print(count)
-        functions.stop(count)
-        url = df.iloc[i,1]
-        url = f'http://{url}'
-        picture.append(url)
-        response = requests.get(url, timeout=30)
-        source = Image.open(BytesIO(response.content))
-        results = model3(source)
-        # results5 = model5(source)
-        n = []
-        cls4 = []
-        ci_cls4 = []
-
-        # Predict Fail or Pass
-        if str(results[0].boxes.cls) == 'tensor([])':
-            predicted_value.append('fail')
-            reason.append('invisible')
-        else:
+    try:
+        for i in range(len(df)):
+    
+            time.sleep(2)
+            count = count + 1
+            print(count)
+            functions.stop(count)
+            url = df.iloc[i,1]
+            url = f'http://{url}'
+            picture.append(url)
+            response = requests.get(url, timeout=30)
+            source = Image.open(BytesIO(response.content))
+            results = model3(source)
+            # results5 = model5(source)
+            n = []
+            cls4 = []
+            ci_cls4 = []
+    
+            # Predict Fail or Pass
+            if str(results[0].boxes.cls) == 'tensor([])':
+                predicted_value.append('fail')
+                reason.append('invisible')
+            else:
+                for box in results[0].boxes:
+                    cls = box.cls
+    
+                    # Do not accept awb and weighing platform of confident interval of awb and weighing
+                    # platform less than 64% and 70% respectively.
+                    n.append(int(cls))
+    
+                if functions.unique(n) == [0]:
+                    reason.append('strange stuffs')
+    
+                elif functions.unique(n) == [1] or functions.unique(n) == [2]:
+                    reason.append('no awb')
+    
+                else:
+                    reason.append('')
+    
+                if functions.unique(n) == [0, 1] or functions.unique(n) == [0, 2]:
+                    predicted_value.append('pass')
+                
+                elif functions.unique(n) == [0,1,2]:
+                    predicted_value.append('pass')
+    
+                else:
+                    predicted_value.append('fail')
+    
+            # Input class and confident interval
             for box in results[0].boxes:
                 cls = box.cls
-
-                # Do not accept awb and weighing platform of confident interval of awb and weighing
-                # platform less than 64% and 70% respectively.
-                n.append(int(cls))
-
-            if functions.unique(n) == [0]:
-                reason.append('strange stuffs')
-
-            elif functions.unique(n) == [1] or functions.unique(n) == [2]:
-                reason.append('no awb')
-
+                conf = box.conf
+    
+                cls4.append(int(cls))
+                ci_cls4.append(float(conf))
+                    
+            model4_dict = functions.m_dict_3(cls4, ci_cls4)
+            model4_dict = functions.transform_dict_3(model4_dict)
+    
+    
+                    
+            if model4_dict[0] > float(0):
+                awb.append(1)
+                ci_awb.append(model4_dict[0])
             else:
-                reason.append('')
-
-            if functions.unique(n) == [0, 1] or functions.unique(n) == [0, 2]:
-                predicted_value.append('pass')
+                awb.append(0)
+                ci_awb.append(model4_dict[0])
+    
+            if model4_dict[1] > float(0) or model4_dict[2] > float(0):
+                platform.append(1)
+                if model4_dict[1] > float(0):
+                    ci_platform.append(model4_dict[1])
+                elif model4_dict[2] > float(0):
+                    ci_platform.append(model4_dict[2])
+            else:
+                platform.append(0)
+                ci_platform.append(0.0)
+    
             
-            elif functions.unique(n) == [0,1,2]:
-                predicted_value.append('pass')
+            ids.append(df.iloc[i,0])
+    
+        cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
+                    columns=['TID', 'Picture', 'Predicted Value', 'Fail Reason', 'AWB', 'CI of AWB', 
+                             'Weighing Platform', 'CI of Weighing Platform'])
+        return cm
+    except:
+        print('These is something wrong')
+        print(f'The program stopped at row {count-2} (ID: {df.iloc[i-1,0]})')
+        print('Result have saved')
 
-            else:
-                predicted_value.append('fail')
-
-        # Input class and confident interval
-        for box in results[0].boxes:
-            cls = box.cls
-            conf = box.conf
-
-            cls4.append(int(cls))
-            ci_cls4.append(float(conf))
-                
-        model4_dict = functions.m_dict_3(cls4, ci_cls4)
-        model4_dict = functions.transform_dict_3(model4_dict)
-
-
-                
-        if model4_dict[0] > float(0):
-            awb.append(1)
-            ci_awb.append(model4_dict[0])
-        else:
-            awb.append(0)
-            ci_awb.append(model4_dict[0])
-
-        if model4_dict[1] > float(0) or model4_dict[2] > float(0):
-            platform.append(1)
-            if model4_dict[1] > float(0):
-                ci_platform.append(model4_dict[1])
-            elif model4_dict[2] > float(0):
-                ci_platform.append(model4_dict[2])
-        else:
-            platform.append(0)
-            ci_platform.append(0.0)
-
+        cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
+                    columns=['TID', 'Picture', 'Predicted Value', 'Fail Reason', 'AWB', 'CI of AWB', 
+                             'Weighing Platform', 'CI of Weighing Platform'])
+        return cm
         
-        ids.append(df.iloc[i,0])
-
-    cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
-                columns=['TID', 'Picture', 'Predicted Value', 'Fail Reason', 'AWB', 'CI of AWB', 
-                         'Weighing Platform', 'CI of Weighing Platform'])
-    return cm
 
 def recommend_lzd(pred, ci_awb, platform, ci_platform):
     if pred == 'pass':
