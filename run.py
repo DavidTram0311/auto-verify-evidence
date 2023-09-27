@@ -47,7 +47,7 @@ def predicted_lzd(df,model3):
         # Predict Fail or Pass
         if str(results[0].boxes.cls) == 'tensor([])':
             predicted_value.append('fail')
-            reason.append('error/invisible')
+            reason.append('invisible')
         else:
             for box in results[0].boxes:
                 cls = box.cls
@@ -149,7 +149,7 @@ def predicted_npsp(folder_pth, model):
 
             # Predict Fail or Pass
             if str(results[0].boxes.cls) == 'tensor([])':
-                reason.append('error/invisible')
+                reason.append('invisible')
                 predicted_value.append('fail')
                 
 
