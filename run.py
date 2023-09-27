@@ -108,7 +108,8 @@ def predicted(df,model3):
     # Create a dataframe
     cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
                 columns=['TID', 'Picture', 'Predicted Value', 'Fail Reason', 'AWB', 'CI of AWB', 
-                         'Weighing Platform', 'CI of Weighing Platform']) 
+                         'Weighing Platform', 'CI of Weighing Platform'])
+    return cm
 # Recommend function
 def recommend(pred, ci_awb, platform, ci_platform):
     if pred == 'pass':
