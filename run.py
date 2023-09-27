@@ -9,7 +9,7 @@ import functions
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 pd.options.display.max_columns = 21
 
-# v3: 0: 'awb', 2: 'weighing-platform-bulky', 3: 'weighing-platform-small'
+# v3: 0: 'awb', 1: 'awb-njv', 2: 'weighing-platform-bulky', 3: 'weighing-platform-small'
 
 def predicted(df,model3):
     awb = []
@@ -25,7 +25,9 @@ def predicted(df,model3):
     picture = []
     reason = []
     count = 0
+
     for i in range(len(df)):
+
         time.sleep(2)
         count = count + 1
         print(count)
@@ -73,44 +75,45 @@ def predicted(df,model3):
 
         # Input class and confident interval
         for box in results[0].boxes:
-                cls = box.cls
-                conf = box.conf
+            cls = box.cls
+            conf = box.conf
 
-                cls4.append(int(cls))
-                ci_cls4.append(float(conf))
+            cls4.append(int(cls))
+            ci_cls4.append(float(conf))
                 
-                model4_dict = functions.m_dict_3(cls4, ci_cls4)
-                model4_dict = functions.transform_dict_3(model4_dict)
-                print(model4_dict)
+        model4_dict = functions.m_dict_3(cls4, ci_cls4)
+        model4_dict = functions.transform_dict_3(model4_dict)
+        print(model4_dict)
+
                 
-                if model4_dict[0] > float(0):
-                    awb.append(1)
-                    ci_awb.append(model4_dict[0])
-                else:
-                    awb.append(0)
-                    ci_awb.append(model4_dict[0])
+        if model4_dict[0] > float(0):
+            awb.append(1)
+            ci_awb.append(model4_dict[0])
+        else:
+            awb.append(0)
+            ci_awb.append(model4_dict[0])
 
-                if model4_dict[1] > float(0):
-                    platform.append(1)
-                    ci_platform.append(model4_dict[1])
-                else:
-                    platform.append(0)
-                    ci_platform.append(model4_dict[1])
+        if model4_dict[1] > float(0):
+            platform.append(1)
+            ci_platform.append(model4_dict[1])
+        else:
+            platform.append(0)
+            ci_platform.append(model4_dict[1])
 
-                if model4_dict[2] > float(0):
-                    platform.append(1)
-                    ci_platform.append(model4_dict[2])
-                else:
-                    platform.append(0)
-                    ci_platform.append(model4_dict[2])
+        if model4_dict[2] > float(0):
+            platform.append(1)
+            ci_platform.append(model4_dict[2])
+        else:
+            platform.append(0)
+            ci_platform.append(model4_dict[2])
         
         ids.append(df.iloc[i,0])
-    # Create a dataframe
+
     cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
                 columns=['TID', 'Picture', 'Predicted Value', 'Fail Reason', 'AWB', 'CI of AWB', 
                          'Weighing Platform', 'CI of Weighing Platform'])
     return cm
-# Recommend function
+
 def recommend(pred, ci_awb, platform, ci_platform):
     if pred == 'pass':
         if ci_awb < float(0.60):
