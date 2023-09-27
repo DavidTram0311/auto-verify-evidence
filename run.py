@@ -14,6 +14,8 @@ pd.options.display.max_columns = 21
 def predicted(df,model3):
     awb = []
     ci_awb = []
+    platform = []
+    ci_platform = []
     small = [] 
     ci_small = []
     bulky = []
@@ -90,28 +92,30 @@ def predicted(df,model3):
                     ci_awb.append(model4_dict[0])
 
                 if model4_dict[1] > float(0):
-                    bulky.append(1)
-                    ci_bulky.append(model4_dict[1])
+                    platform.append(1)
+                    ci_platform.append(model4_dict[1])
                 else:
-                    bulky.append(0)
-                    ci_bulky.append(model4_dict[1])
+                    platform.append(0)
+                    ci_platform.append(model4_dict[1])
 
                 if model4_dict[2] > float(0):
-                    small.append(1)
-                    ci_small.append(model4_dict[2])
+                    platform.append(1)
+                    ci_platform.append(model4_dict[2])
                 else:
-                    small.append(0)
-                    ci_small.append(model4_dict[2])
+                    platform.append(0)
+                    ci_platform.append(model4_dict[2])
         
         ids.append(df.iloc[i,0])
 
-def recommend(pred, ci_awb, small, ci_small, bulky, ci_bulky):
+    cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
+                columns=['TID', 'Picture', 'Predicted Value', 'Fail Reason', 'AWB', 'CI of AWB', 
+                         'Weighing Platform', 'CI of Weighing Platform']) 
+
+def recommend(pred, ci_awb, platform, ci_platform):
     if pred == 'pass':
         if ci_awb < float(0.60):
             return 1
-        elif small == 1 and ci_small < float(0.956):
-            return 1
-        elif bulky == 1 and ci_bulky < float(0.956):
+        elif platform == 1 and ci_platform < float(0.956):
             return 1
         else:
             return 0
