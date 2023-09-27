@@ -161,17 +161,17 @@ def predicted_npsp(folder_pth, model):
                     cls4.append(int(cls))
                     ci_cls4.append(float(ci))
 
-                if function.unique(cls4) == [0]:
+                if functions.unique(cls4) == [0]:
                     reason.append('strange stuffs')
-                elif function.unique(cls4) == [1]:
+                elif functions.unique(cls4) == [1]:
                     reason.append('strange stuffs')
                 else:
                     reason.append('')
 
-                if function.unique(cls4) == [0, 2] or function.unique(cls4) == [0, 3]:
+                if functions.unique(cls4) == [0, 2] or functions.unique(cls4) == [0, 3]:
                     predicted_value.append('pass')
 
-                elif function.unique(cls4) == [2] or function.unique(cls4) == [3]:
+                elif functions.unique(cls4) == [2] or functions.unique(cls4) == [3]:
                     predicted_value.append('pass')
 
                 else:
@@ -179,8 +179,8 @@ def predicted_npsp(folder_pth, model):
 
                 # Input class and confident interval
 
-            model4_dict = function.m_dict_5(cls4, ci_cls4)
-            model4_dict = function.transform_dict_5(model4_dict)
+            model4_dict = functions.m_dict_5(cls4, ci_cls4)
+            model4_dict = functions.transform_dict_5(model4_dict)
 
 
             if model4_dict[2] > float(0) or model4_dict[3] > float(0):
