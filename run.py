@@ -98,7 +98,7 @@ def predicted(df,model3):
             if model4_dict[1] > float(0):
                 ci_platform.append(model4_dict[1])
             elif model4_dict[2] > float(0):
-                ci_platform.append(model4_dict[1])
+                ci_platform.append(model4_dict[2])
         else:
             platform.append(0)
             ci_platform.append(0.0)
