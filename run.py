@@ -201,7 +201,7 @@ def predicted_npsp(folder_pth, model):
                     'Weighing Platform', 'CI of Weighing Platform'])
     return cm
 
-def recommend_npsp(pred, reason, platform, ci_platform):
+def recommend_npsp(pred, platform, ci_platform):
     if pred == 'pass':
         if platform == 1 and ci_platform < float(0.948):
             return 1
@@ -209,9 +209,6 @@ def recommend_npsp(pred, reason, platform, ci_platform):
             return 0
     
     elif pred == 'fail':
-        if reason == 'error/invisible':
-            return 0
-        else:
-            return 1
+        return 1
     
 
