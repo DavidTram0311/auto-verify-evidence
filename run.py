@@ -105,8 +105,8 @@ def predicted_lzd(df,model3):
             ids.append(df['TID'][i])
     
         cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
-                    columns=['TID', 'Picture', 'Predicted Value', 'Fail Reason', 'AWB', 'CI of AWB', 
-                             'Weighing Platform', 'CI of Weighing Platform'])
+                    columns=['TID', 'Picture', 'Predicted Value', 'Fail Reason', 'AWB', 'Conf of AWB', 
+                             'Weighing Platform', 'Conf of Weighing Platform'])
         return cm
     except:
         print('These is something wrong')
@@ -114,8 +114,8 @@ def predicted_lzd(df,model3):
         print('Result have saved')
 
         cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
-                    columns=['TID', 'Picture', 'Predicted Value', 'Fail Reason', 'AWB', 'CI of AWB', 
-                             'Weighing Platform', 'CI of Weighing Platform'])
+                    columns=['TID', 'Picture', 'Predicted Value', 'Fail Reason', 'AWB', 'Conf of AWB', 
+                             'Weighing Platform', 'Conf of Weighing Platform'])
         return cm
         
 
@@ -206,7 +206,7 @@ def predicted_npsp(folder_pth, model):
 
     cm = pd.DataFrame(list(zip(ids, orders, predicted_value, reason, platform, ci_platform)),
             columns=['TID', 'Photo ID', 'Predicted Value', 'Fail Reason', 
-                    'Weighing Platform', 'CI of Weighing Platform'])
+                    'Weighing Platform', 'Conf of Weighing Platform'])
     return cm
 
 def recommend_npsp(pred, platform, ci_platform):
