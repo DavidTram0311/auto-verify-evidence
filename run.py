@@ -30,7 +30,7 @@ def predicted_lzd(df,model3):
             count = count + 1
             print(count)
             functions.stop(count)
-            url = df.iloc[i,1]
+            url = df['Picture'][i]
             url = f'https://{url}'
             picture.append(url)
             response = requests.get(url, verify=False, timeout=30)
@@ -102,7 +102,7 @@ def predicted_lzd(df,model3):
                 ci_platform.append(0.0)
     
             
-            ids.append(df.iloc[i,0])
+            ids.append(df['TID'][i])
     
         cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
                     columns=['TID', 'Picture', 'Predicted Value', 'Fail Reason', 'AWB', 'CI of AWB', 
