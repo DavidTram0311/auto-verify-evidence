@@ -12,7 +12,7 @@ pd.options.display.max_columns = 21
 
 # v3: 0: 'awb', 1: 'awb-njv', 2: 'weighing-platform-bulky', 3: 'weighing-platform-small'
 
-def predicted_lzd(df,model3):
+def predicted_lzd_gcs(df,model3):
     awb = []
     ci_awb = []
     platform = []
@@ -119,7 +119,112 @@ def predicted_lzd(df,model3):
         return cm
         
 
-def recommend_lzd(pred, ci_awb, platform, ci_platform):
+def recommend_lzd_gcs(pred, ci_awb, platform, ci_platform):
+    if pred == 'pass':
+        if ci_awb < float(0.60):
+            return 1
+        elif platform == 1 and ci_platform < float(0.956):
+            return 1
+        else:
+            return 0
+    
+    elif pred == 'fail':
+        return 1
+
+#-----------------------------------------------------------------------------------------------------#
+# LZD - Drive
+def predicted_lzd_drive(folder_pth, model):
+    awb = []
+    ci_awb = []
+    platform = []
+    ci_platform = []
+    ids = []
+    predicted_value = []
+    reason = []
+    orders = []
+
+    for i in os.listdir(folder_pth):
+        id_path = f'{folder_pth}/{i}'
+        print(id_path)
+
+        for j in os.listdir(id_path):
+            name = j.split('.')[0]
+            length = len(name.split('_'))
+            id = name.split('_')[0]
+            order = name.split('_')[length-1]
+            source = f'{id_path}/{j}'
+            results = model(source)
+            cls4 = []
+            ci_cls4 = []
+
+            # Predict Fail or Pass
+            if str(results[0].boxes.cls) == 'tensor([])':
+                predicted_value.append('fail')
+                reason.append('error/invisible')
+            else:
+                for box in results[0].boxes:
+                    cls = box.cls
+                    ci = box.conf
+
+                    # Do not accept awb and weighing platform of confident interval of awb and weighing
+                    # platform less than 64% and 70% respectively.
+                    cls4.append(int(cls))
+                    ci_cls4.append(float(ci))
+
+                if functions.unique(cls4) == [0]:
+                    reason.append('strange stuffs')
+
+                elif functions.unique(cls4) == [1] or functions.unique(cls4) == [2]:
+                    reason.append('no awb')
+
+                else:
+                    reason.append('')
+
+                if functions.unique(cls4) == [0, 1] or functions.unique(cls4) == [0, 2]:
+                    predicted_value.append('pass')
+                
+                elif functions.unique(cls4) == [0,1,2]:
+                    predicted_value.append('pass')
+
+                else:
+                    predicted_value.append('fail')
+
+            # Input class and confident interval                   
+            model4_dict = functions.m_dict_3(cls4, ci_cls4)
+            model4_dict = functions.transform_dict_3(model4_dict)
+            print(model4_dict)
+
+                    
+            if model4_dict[0] > float(0):
+                awb.append(1)
+                ci_awb.append(model4_dict[0])
+            else:
+                awb.append(0)
+                ci_awb.append(model4_dict[0])
+
+            if model4_dict[1] > float(0) or model4_dict[2] > float(0):
+                platform.append(1)
+                if model4_dict[1] > float(0):
+                    ci_platform.append(model4_dict[1])
+                elif model4_dict[2] > float(0):
+                    ci_platform.append(model4_dict[2])
+            else:
+                platform.append(0)
+                ci_platform.append(0.0)
+
+            print(platform)
+            print(ci_platform)
+
+            
+            ids.append(id)
+            orders.append(order)
+
+        cm = pd.DataFrame(list(zip(ids, orders, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
+                    columns=['TID', 'Photo_ID', 'Predicted_Value', 'Fail_Reason', 'AWB', 'CI_of_AWB', 
+                            'Weighing_Platform', 'CI_Weighing_Platform'])
+        return cm
+
+def recommend_lzd_drive(pred, ci_awb, platform, ci_platform):
     if pred == 'pass':
         if ci_awb < float(0.60):
             return 1
