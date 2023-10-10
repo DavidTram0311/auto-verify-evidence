@@ -219,11 +219,11 @@ def predicted_lzd_drive(folder_pth, model):
             ids.append(id)
             orders.append(order)
 
-        cm = pd.DataFrame(list(zip(ids, orders, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
-                    columns=['TID', 'Photo_ID', 'Predicted_Value', 'Fail_Reason', 'AWB', 'Conf_AWB', 
-                            'Weighing_Platform', 'Conf_Weighing_Platform'])
-        return cm
-
+    cm = pd.DataFrame(list(zip(ids, orders, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
+                columns=['TID', 'Photo_ID', 'Predicted_Value', 'Fail_Reason', 'AWB', 'Conf_AWB', 
+                        'Weighing_Platform', 'Conf_Weighing_Platform'])
+    return cm
+    
 def recommend_lzd_drive(pred, ci_awb, platform, ci_platform):
     if pred == 'pass':
         if ci_awb < float(0.60):
