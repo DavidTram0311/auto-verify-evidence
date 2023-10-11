@@ -234,7 +234,10 @@ def recommend_lzd_drive(pred, ci_awb, platform, ci_platform):
             return 0
     
     elif pred == 'fail':
-        return 1
+        if ci_awb == 0 and ci_platform == 0:
+            return 0
+        else:
+            return 1
 
 #-----------------------------------------------------------------------------------------------------#
 # Non - partnership
