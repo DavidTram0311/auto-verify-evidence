@@ -192,7 +192,6 @@ def predicted_lzd_drive(folder_pth, model):
             # Input class and confident interval                   
             model4_dict = functions.m_dict_3(cls4, ci_cls4)
             model4_dict = functions.transform_dict_3(model4_dict)
-            print(model4_dict)
 
                     
             if model4_dict[0] > float(0):
@@ -212,8 +211,6 @@ def predicted_lzd_drive(folder_pth, model):
                 platform.append(0)
                 ci_platform.append(0.0)
 
-            print(platform)
-            print(ci_platform)
 
             
             ids.append(id)
@@ -310,7 +307,6 @@ def predicted_npsp(folder_pth, model):
                 ci_platform.append(0.0)
             ids.append(id)
             orders.append(order)
-            print(reason)
 
     cm = pd.DataFrame(list(zip(ids, orders, predicted_value, reason, platform, ci_platform)),
             columns=['TID', 'Photo_ID', 'Predicted_Value', 'Fail_Reason', 
