@@ -401,8 +401,8 @@ def predicted_npsp_gcs(df, model5):
                 
 
         cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, platform, ci_platform)),
-                columns=['TID', 'Pictures', 'Predicted Value', 'Fail Reason', 
-                        'Weighing Platform', 'CI of Weighing Platform'])
+                columns=['TID', 'Pictures', 'Predicted_Value', 'Fail_Reason', 
+                        'Weighing_Platform', 'Conf_Weighing_Platform'])
         return cm
     
     except:
@@ -411,8 +411,8 @@ def predicted_npsp_gcs(df, model5):
         print(f'The program stopped at row {count-2} (ID: {df.iloc[i-1,0]})')
         print('Result have saved')
         cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, platform, ci_platform)),
-                columns=['TID', 'Pictures', 'Predicted Value', 'Fail Reason', 
-                        'Weighing Platform', 'CI of Weighing Platform'])
+                columns=['TID', 'Pictures', 'Predicted_Value', 'Fail_Reason', 
+                        'Weighing_Platform', 'Conf_Weighing_Platform'])
         return cm
     
 
