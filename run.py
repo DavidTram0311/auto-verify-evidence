@@ -282,6 +282,9 @@ def predicted_npsp_drive(folder_pth, model):
 
                 if functions.unique(cls4) == [0, 2] or functions.unique(cls4) == [0, 3]:
                     predicted_value.append('pass')
+                    
+                if functions.unique(cls4) == [1, 2] or functions.unique(cls4) == [1, 3]:
+                    predicted_value.append('pass')
 
                 elif functions.unique(cls4) == [2] or functions.unique(cls4) == [3]:
                     predicted_value.append('pass')
@@ -370,6 +373,9 @@ def predicted_npsp_gcs(df, model5):
                     reason.append('')
 
                 if functions.unique(cls4) == [0, 2] or functions.unique(cls4) == [0, 3]:
+                    predicted_value.append('pass')
+
+                if functions.unique(cls4) == [1, 2] or functions.unique(cls4) == [1, 3]:
                     predicted_value.append('pass')
 
                 elif functions.unique(cls4) == [2] or functions.unique(cls4) == [3]:
