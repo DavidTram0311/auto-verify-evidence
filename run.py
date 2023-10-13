@@ -237,8 +237,8 @@ def recommend_lzd_drive(pred, ci_awb, platform, ci_platform):
             return 1
 
 #-----------------------------------------------------------------------------------------------------#
-# Non - partnership
-def predicted_npsp(folder_pth, model):
+# Non - partnership drive
+def predicted_npsp_drive(folder_pth, model):
     platform = [] 
     orders = []
     ci_platform = []
@@ -322,5 +322,96 @@ def recommend_npsp(pred, platform, ci_platform):
     
     elif pred == 'fail':
         return 1
+
+#-----------------------------------------------------------------------------------------------------#
+# Non partnershop GSC
+def predicted_npsp_gcs(df, model5):
+    platform = [] 
+    ci_platform = []
+    ids = []
+    predicted_value = []
+    reason = []
+    picture = []
+
+    try:
+
+        for i in range(len(df)):
+            time.sleep(2)
+            count = count + 1
+            functions.stop(count)
+            url = df.iloc[i,1]
+            url = f'http://{url}'
+
+            picture.append(url)
+            response = requests.get(url, timeout=30)
+            source = Image.open(BytesIO(response.content))
+            results = model5(source)
+            # results5 = model5(source)
+            cls4 = []
+            ci_cls4 = []
+
+            # Predict Fail or Pass
+            if str(results[0].boxes.cls) == 'tensor([])':
+                predicted_value.append('fail')
+                reason.append('error/invisible')
+
+            else:
+                for box in results[0].boxes:
+                    cls = box.cls
+                    ci = box.conf
+                # Do not accept awb and weighing platform of confident interval of awb and weighing
+                # platform less than 64% and 70% respectively.
+                    cls4.append(int(cls))
+                    ci_cls4.append(float(ci))
+
+                if functions.unique(cls4) == [0]:
+                    reason.append('strange stuffs')
+                elif functions.unique(cls4) == [1]:
+                    reason.append('strange stuffs')
+                else:
+                    reason.append('')
+
+                if functions.unique(cls4) == [0, 2] or functions.unique(cls4) == [0, 3]:
+                    predicted_value.append('pass')
+
+                elif functions.unique(cls4) == [2] or functions.unique(cls4) == [3]:
+                    predicted_value.append('pass')
+
+                else:
+                    predicted_value.append('fail')
+
+                # Input class and confident interval
+
+            model4_dict = functions.m_dict_5(cls4, ci_cls4)
+            model4_dict = functions.transform_dict_5(model4_dict)
+
+
+            if model4_dict[2] > float(0) or model4_dict[3] > float(0):
+                platform.append(1)
+                if model4_dict[2] > float(0):
+                    ci_platform.append(model4_dict[2])
+                elif model4_dict[3] > float(0):
+                    ci_platform.append(model4_dict[3])
+            else:
+                platform.append(0)
+                ci_platform.append(0.0)
+
+            ids.append(id)
+                
+
+        cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, platform, ci_platform)),
+                columns=['TID', 'Pictures', 'Predicted Value', 'Fail Reason', 
+                        'Weighing Platform', 'CI of Weighing Platform'])
+        return cm
+    
+    except:
+
+        print('These is something wrong')
+        print(f'The program stopped at row {count-2} (ID: {df.iloc[i-1,0]})')
+        print('Result have saved')
+        cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, platform, ci_platform)),
+                columns=['TID', 'Pictures', 'Predicted Value', 'Fail Reason', 
+                        'Weighing Platform', 'CI of Weighing Platform'])
+        return cm
     
 
