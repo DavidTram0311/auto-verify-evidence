@@ -245,7 +245,6 @@ def predicted_npsp_drive(folder_pth, model):
     ids = []
     predicted_value = []
     reason = []
-    count = 0 
     
     for i in os.listdir(folder_pth):
         id_path = f'{folder_pth}/{i}'
@@ -334,7 +333,7 @@ def predicted_npsp_gcs(df, model5):
     predicted_value = []
     reason = []
     picture = []
-
+    count = 0
     try:
 
         for i in range(len(df)):
