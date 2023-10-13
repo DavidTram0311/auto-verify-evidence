@@ -245,6 +245,8 @@ def predicted_npsp_drive(folder_pth, model):
     ids = []
     predicted_value = []
     reason = []
+    count = 0 
+    
     for i in os.listdir(folder_pth):
         id_path = f'{folder_pth}/{i}'
         print(id_path)
