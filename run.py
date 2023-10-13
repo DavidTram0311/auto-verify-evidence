@@ -397,7 +397,7 @@ def predicted_npsp_gcs(df, model5):
                 platform.append(0)
                 ci_platform.append(0.0)
 
-            ids.append(id)
+            ids.append(df.iloc[i,0])
                 
 
         cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, platform, ci_platform)),
