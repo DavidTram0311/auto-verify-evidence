@@ -25,8 +25,6 @@ def predicted_lzd_gcs(df,model3):
 
     try:
         for i in range(len(df)):
-    
-            time.sleep(1)
             count = count + 1
             print(count)
             functions.stop(count)
@@ -337,7 +335,6 @@ def predicted_npsp_gcs(df, model5):
     try:
 
         for i in range(len(df)):
-            time.sleep(2)
             count = count + 1
             functions.stop(count)
             url = df.iloc[i,1]
