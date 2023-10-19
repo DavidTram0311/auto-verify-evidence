@@ -131,7 +131,7 @@ def recommend_lzd_gcs(pred, ci_awb, platform, ci_platform):
 
 #-----------------------------------------------------------------------------------------------------#
 # LZD - Drive
-def predicted_lzd_drive(folder_pth, model):
+def predicted_lzd_drive_old(folder_pth, model):
     awb = []
     ci_awb = []
     platform = []
