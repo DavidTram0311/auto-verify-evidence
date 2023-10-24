@@ -10,7 +10,7 @@ import os
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 pd.options.display.max_columns = 21
 
-# v3: 0: 'awb', 1: 'awb-njv', 2: 'weighing-platform-bulky', 3: 'weighing-platform-small'
+# v3: 0: 'awb', 1: 'weighing-platform-bulky', 2: 'weighing-platform-small'
 
 def predicted_lzd_gcs(df,model3):
     awb = []
