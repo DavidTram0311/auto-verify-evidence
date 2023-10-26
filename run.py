@@ -50,7 +50,8 @@ def predicted_lzd_gcs(df,model3):
                     # Do not accept awb and weighing platform of confident interval of awb and weighing
                     # platform less than 64% and 70% respectively.
                     n.append(int(cls))
-    
+
+                # add reason of fail
                 if functions.unique(n) == [0]:
                     reason.append('strange stuffs')
     
@@ -59,7 +60,8 @@ def predicted_lzd_gcs(df,model3):
     
                 else:
                     reason.append('')
-    
+
+                # add predict value
                 if functions.unique(n) == [0, 1] or functions.unique(n) == [0, 2]:
                     predicted_value.append('pass')
                 
@@ -169,6 +171,7 @@ def predicted_lzd_drive(folder_pth, model):
                     cls4.append(int(cls))
                     ci_cls4.append(float(ci))
 
+                # add reason of fail
                 if functions.unique(cls4) == [0]:
                     reason.append('strange stuffs')
 
@@ -178,6 +181,7 @@ def predicted_lzd_drive(folder_pth, model):
                 else:
                     reason.append('')
 
+                # add predict value
                 if functions.unique(cls4) == [0, 1] or functions.unique(cls4) == [0, 2]:
                     predicted_value.append('pass')
                 
@@ -199,6 +203,7 @@ def predicted_lzd_drive(folder_pth, model):
                 awb.append(0)
                 ci_awb.append(model4_dict[0])
 
+            # Add appearance value (0: no or 1: yes) and confident score of weighing platform and awb
             if model4_dict[1] > float(0) or model4_dict[2] > float(0):
                 platform.append(1)
                 if model4_dict[1] > float(0):
@@ -273,20 +278,17 @@ def predicted_npsp_drive(folder_pth, model):
                     cls4.append(int(cls))
                     ci_cls4.append(float(ci))
 
+                # add reason of fail
                 if functions.unique(cls4) == [0]:
-                    reason.append('strange stuffs')
-                elif functions.unique(cls4) == [1]:
                     reason.append('strange stuffs')
                 else:
                     reason.append('')
 
-                if functions.unique(cls4) == [0, 2] or functions.unique(cls4) == [0, 3]:
-                    predicted_value.append('pass')
-                    
-                if functions.unique(cls4) == [1, 2] or functions.unique(cls4) == [1, 3]:
+                # add predict value
+                if functions.unique(cls4) == [0, 1] or functions.unique(cls4) == [0, 2]:
                     predicted_value.append('pass')
 
-                elif functions.unique(cls4) == [2] or functions.unique(cls4) == [3]:
+                elif functions.unique(cls4) == [1] or functions.unique(cls4) == [2]:
                     predicted_value.append('pass')
 
                 else:
@@ -294,16 +296,16 @@ def predicted_npsp_drive(folder_pth, model):
 
                 # Input class and confident interval
 
-            model4_dict = functions.m_dict_5(cls4, ci_cls4)
-            model4_dict = functions.transform_dict_5(model4_dict)
+            model4_dict = functions.m_dict_3(cls4, ci_cls4)
+            model4_dict = functions.transform_dict_3(model4_dict)
 
-
-            if model4_dict[2] > float(0) or model4_dict[3] > float(0):
+            # Add appearance value (0: no or 1: yes) and confident score of weighing platform
+            if model4_dict[1] > float(0) or model4_dict[2] > float(0):
                 platform.append(1)
-                if model4_dict[2] > float(0):
+                if model4_dict[1] > float(0):
+                    ci_platform.append(model4_dict[1])
+                elif model4_dict[2] > float(0):
                     ci_platform.append(model4_dict[2])
-                elif model4_dict[3] > float(0):
-                    ci_platform.append(model4_dict[3])
             else:
                 platform.append(0)
                 ci_platform.append(0.0)
@@ -360,25 +362,20 @@ def predicted_npsp_gcs(df, model5):
                 for box in results[0].boxes:
                     cls = box.cls
                     ci = box.conf
-                # Do not accept awb and weighing platform of confident interval of awb and weighing
-                # platform less than 64% and 70% respectively.
                     cls4.append(int(cls))
                     ci_cls4.append(float(ci))
 
+                # add reason of fail
                 if functions.unique(cls4) == [0]:
-                    reason.append('strange stuffs')
-                elif functions.unique(cls4) == [1]:
                     reason.append('strange stuffs')
                 else:
                     reason.append('')
 
-                if functions.unique(cls4) == [0, 2] or functions.unique(cls4) == [0, 3]:
+                # add predict value
+                if functions.unique(cls4) == [0, 1] or functions.unique(cls4) == [0, 2]:
                     predicted_value.append('pass')
 
-                if functions.unique(cls4) == [1, 2] or functions.unique(cls4) == [1, 3]:
-                    predicted_value.append('pass')
-
-                elif functions.unique(cls4) == [2] or functions.unique(cls4) == [3]:
+                elif functions.unique(cls4) == [1] or functions.unique(cls4) == [2]:
                     predicted_value.append('pass')
 
                 else:
@@ -386,16 +383,16 @@ def predicted_npsp_gcs(df, model5):
 
                 # Input class and confident interval
 
-            model4_dict = functions.m_dict_5(cls4, ci_cls4)
-            model4_dict = functions.transform_dict_5(model4_dict)
+            model4_dict = functions.m_dict_3(cls4, ci_cls4)
+            model4_dict = functions.transform_dict_3(model4_dict)
 
-
-            if model4_dict[2] > float(0) or model4_dict[3] > float(0):
+            # Add appearance value (0: no or 1: yes) and confident score of weighing platform 
+            if model4_dict[1] > float(0) or model4_dict[2] > float(0):
                 platform.append(1)
-                if model4_dict[2] > float(0):
+                if model4_dict[1] > float(0):
+                    ci_platform.append(model4_dict[1])
+                elif model4_dict[2] > float(0):
                     ci_platform.append(model4_dict[2])
-                elif model4_dict[3] > float(0):
-                    ci_platform.append(model4_dict[3])
             else:
                 platform.append(0)
                 ci_platform.append(0.0)
