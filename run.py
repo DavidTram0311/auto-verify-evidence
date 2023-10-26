@@ -119,9 +119,9 @@ def predicted_lzd_gcs(df,model3):
 
 def recommend_lzd_gcs(pred, ci_awb, platform, ci_platform):
     if pred == 'pass':
-        if ci_awb < float(0.60):
+        if ci_awb < float(0.87):
             return 1
-        elif platform == 1 and ci_platform < float(0.956):
+        elif platform == 1 and ci_platform < float(0.96):
             return 1
         else:
             return 0
@@ -221,9 +221,9 @@ def predicted_lzd_drive(folder_pth, model):
     
 def recommend_lzd_drive(pred, ci_awb, platform, ci_platform):
     if pred == 'pass':
-        if ci_awb < float(0.60):
+        if ci_awb < float(0.87):
             return 1
-        elif platform == 1 and ci_platform < float(0.956):
+        elif platform == 1 and ci_platform < float(0.96):
             return 1
         else:
             return 0
@@ -317,7 +317,7 @@ def predicted_npsp_drive(folder_pth, model):
 
 def recommend_npsp(pred, platform, ci_platform):
     if pred == 'pass':
-        if platform == 1 and ci_platform < float(0.948):
+        if platform == 1 and ci_platform < float(0.96):
             return 1
         else:
             return 0
