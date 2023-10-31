@@ -12,7 +12,7 @@ def unique(numbers):
 
 def stop(count):
     if count % 50 == 0:
-        time.sleep(60)
+        time.sleep(30)
 
 # Create dict for model 3 - run for gcs tool
 def m_dict_3(cls, ci):
