@@ -14,7 +14,7 @@ def stop(count):
     if count % 50 == 0:
         time.sleep(30)
 
-# Create dict for model 3 - run for gcs tool
+# Create dict for model
 def m_dict_3(cls, ci):
     my_dict = {}
     awb = []
