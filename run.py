@@ -34,8 +34,6 @@ def predicted_lzd_gcs(df,model3):
             response = requests.get(url, verify=False, timeout=30)
             source = Image.open(BytesIO(response.content))
             results = model3(source)
-            # results5 = model5(source)
-            n = []
             cls4 = []
             ci_cls4 = []
     
@@ -46,10 +44,11 @@ def predicted_lzd_gcs(df,model3):
             else:
                 for box in results[0].boxes:
                     cls = box.cls
-    
-                    # Do not accept awb and weighing platform of confident interval of awb and weighing
-                    # platform less than 64% and 70% respectively.
-                    n.append(int(cls))
+                    conf = box.conf
+
+                    # Append class value and confident score of awb and 2 platform 
+                    cls4.append(int(cls))
+                    ci_cls4.append(float(conf))
 
                 # add reason of fail
                 if functions.unique(n) == [0]:
@@ -71,14 +70,7 @@ def predicted_lzd_gcs(df,model3):
                 else:
                     predicted_value.append('fail')
     
-            # Input class and confident interval
-            for box in results[0].boxes:
-                cls = box.cls
-                conf = box.conf
-    
-                cls4.append(int(cls))
-                ci_cls4.append(float(conf))
-                    
+            # Input class and confident interval  
             model4_dict = functions.m_dict_3(cls4, ci_cls4)
 
             # Add appearance value (0: no or 1: yes) and confident score of weighing platform 
@@ -269,8 +261,7 @@ def predicted_npsp_drive(folder_pth, model):
                 for box in results[0].boxes:
                     cls = box.cls
                     ci = box.conf
-                # Do not accept awb and weighing platform of confident interval of awb and weighing
-                # platform less than 64% and 70% respectively.
+
                     cls4.append(int(cls))
                     ci_cls4.append(float(ci))
 
@@ -290,8 +281,7 @@ def predicted_npsp_drive(folder_pth, model):
                 else:
                     predicted_value.append('fail')
 
-                # Input class and confident interval
-
+            # Input class and confident interval
             model4_dict = functions.m_dict_3(cls4, ci_cls4)
 
             # Add appearance value (0: no or 1: yes) and confident score of weighing platform
@@ -376,8 +366,7 @@ def predicted_npsp_gcs(df, model5):
                 else:
                     predicted_value.append('fail')
 
-                # Input class and confident interval
-
+            # Input class and confident interval
             model4_dict = functions.m_dict_3(cls4, ci_cls4)
 
             # Add appearance value (0: no or 1: yes) and confident score of weighing platform 
