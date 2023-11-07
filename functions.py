@@ -14,6 +14,9 @@ def stop(count):
     if count % 50 == 0:
         time.sleep(30)
 
+def average(lst):
+    return sum(lst) / len(lst)
+
 # Create dict for model
 def m_dict_3(cls, ci):
     my_dict = {}
@@ -32,12 +35,8 @@ def m_dict_3(cls, ci):
     my_dict[0] = awb
     my_dict[1] = bulky
     my_dict[2] = small
-    return my_dict
 
-def average(lst):
-    return sum(lst) / len(lst)
-
-def transform_dict_3(my_dict):
+    # Transform dict
     for i in range(0,3):    
         if str(my_dict[i]) == '[]':
             my_dict[i] = [0]
@@ -46,3 +45,14 @@ def transform_dict_3(my_dict):
         my_dict[i] = average(my_dict[i])
     
     return my_dict
+
+
+# def transform_dict_3(my_dict):
+#     for i in range(0,3):    
+#         if str(my_dict[i]) == '[]':
+#             my_dict[i] = [0]
+
+#     for i in range(0,3):
+#         my_dict[i] = average(my_dict[i])
+    
+#     return my_dict
