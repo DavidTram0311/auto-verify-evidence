@@ -80,10 +80,8 @@ def predicted_lzd_gcs(df,model3):
                 ci_cls4.append(float(conf))
                     
             model4_dict = functions.m_dict_3(cls4, ci_cls4)
-            model4_dict = functions.transform_dict_3(model4_dict)
-    
-    
-                    
+
+            # Add appearance value (0: no or 1: yes) and confident score of weighing platform 
             if model4_dict[0] > float(0):
                 awb.append(1)
                 ci_awb.append(model4_dict[0])
@@ -193,9 +191,7 @@ def predicted_lzd_drive(folder_pth, model):
 
             # Input class and confident interval                   
             model4_dict = functions.m_dict_3(cls4, ci_cls4)
-            model4_dict = functions.transform_dict_3(model4_dict)
-
-                    
+ 
             if model4_dict[0] > float(0):
                 awb.append(1)
                 ci_awb.append(model4_dict[0])
@@ -297,7 +293,6 @@ def predicted_npsp_drive(folder_pth, model):
                 # Input class and confident interval
 
             model4_dict = functions.m_dict_3(cls4, ci_cls4)
-            model4_dict = functions.transform_dict_3(model4_dict)
 
             # Add appearance value (0: no or 1: yes) and confident score of weighing platform
             if model4_dict[1] > float(0) or model4_dict[2] > float(0):
@@ -384,7 +379,6 @@ def predicted_npsp_gcs(df, model5):
                 # Input class and confident interval
 
             model4_dict = functions.m_dict_3(cls4, ci_cls4)
-            model4_dict = functions.transform_dict_3(model4_dict)
 
             # Add appearance value (0: no or 1: yes) and confident score of weighing platform 
             if model4_dict[1] > float(0) or model4_dict[2] > float(0):
