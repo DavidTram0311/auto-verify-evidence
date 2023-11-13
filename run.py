@@ -12,6 +12,19 @@ pd.options.display.max_columns = 21
 
 # v3: 0: 'awb', 1: 'weighing-platform-bulky', 2: 'weighing-platform-small'
 
+# Recheck Recommendation Function for LZD tool
+def recommend_lzd(pred, ci_awb, platform, ci_platform):
+    if pred == 'pass':
+        if ci_awb < float(0.87):
+            return 1
+        elif platform == 1 and ci_platform < float(0.96):
+            return 1
+        else:
+            return 0
+    
+    elif pred == 'fail':
+        return 1
+
 def predicted_lzd_gcs(df,model3):
     awb = []
     ci_awb = []
@@ -97,6 +110,15 @@ def predicted_lzd_gcs(df,model3):
         cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
                     columns=['TID', 'Picture', 'Predicted_Value', 'Fail_Reason', 'AWB', 'Conf_AWB', 
                              'Weighing_Platform', 'Conf_Weighing_Platform'])
+
+        # Recheck Recommendation
+        cm['Recheck_needed'] = [recommend_lzd(pred, ci_awb, platform, ci_platform)
+                                      for pred, ci_awb, platform, ci_platform in zip(output['Predicted_Value'], output['Conf_AWB'],
+                                                                                      output['Weighing_Platform'], output['Conf_Weighing_Platform'])]
+
+        column_to_move = cm.pop("Recheck_needed")
+        cm.insert(4, "Recheck_needed", column_to_move)
+        
         return cm
     except:
         print('These is something wrong')
@@ -106,23 +128,21 @@ def predicted_lzd_gcs(df,model3):
         cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
                     columns=['TID', 'Picture', 'Predicted_Value', 'Fail_Reason', 'AWB', 'Conf_AWB', 
                              'Weighing_Platform', 'Conf_Weighing_Platform'])
+
+        # Recheck Recommendation
+        cm['Recheck_needed'] = [recommend_lzd(pred, ci_awb, platform, ci_platform)
+                                      for pred, ci_awb, platform, ci_platform in zip(cm['Predicted_Value'], cm['Conf_AWB'],
+                                                                                      cm['Weighing_Platform'], cm['Conf_Weighing_Platform'])]
+
+        column_to_move = cm.pop("Recheck_needed")
+        cm.insert(4, "Recheck_needed", column_to_move)
+        
         return cm
         
 
-def recommend_lzd_gcs(pred, ci_awb, platform, ci_platform):
-    if pred == 'pass':
-        if ci_awb < float(0.87):
-            return 1
-        elif platform == 1 and ci_platform < float(0.96):
-            return 1
-        else:
-            return 0
-    
-    elif pred == 'fail':
-        return 1
-
 #-----------------------------------------------------------------------------------------------------#
 # LZD - Drive
+
 def predicted_lzd_drive(folder_pth, model):
     awb = []
     ci_awb = []
@@ -201,34 +221,37 @@ def predicted_lzd_drive(folder_pth, model):
             else:
                 platform.append(0)
                 ci_platform.append(0.0)
-
-
-            
+  
             ids.append(id)
             orders.append(order)
 
     cm = pd.DataFrame(list(zip(ids, orders, predicted_value, reason, awb, ci_awb, platform, ci_platform)),
                 columns=['TID', 'Photo_ID', 'Predicted_Value', 'Fail_Reason', 'AWB', 'Conf_AWB', 
                         'Weighing_Platform', 'Conf_Weighing_Platform'])
+    
+    # Recheck Recommendation
+    cm['Recheck_needed'] = [recommend_lzd(pred, ci_awb, platform, ci_platform)
+                                  for pred, ci_awb, platform, ci_platform in zip(cm['Predicted_Value'], cm['Conf_AWB'],
+                                                                                  cm['Weighing_Platform'], cm['Conf_Weighing_Platform'])]
+
+    column_to_move = cm.pop("Recheck_needed")
+    cm.insert(4, "Recheck_needed", column_to_move)
+    
     return cm
     
-def recommend_lzd_drive(pred, ci_awb, platform, ci_platform):
+
+#-----------------------------------------------------------------------------------------------------#
+# Non - partnership drive
+def recommend_npsp(pred, platform, ci_platform):
     if pred == 'pass':
-        if ci_awb < float(0.87):
-            return 1
-        elif platform == 1 and ci_platform < float(0.96):
+        if platform == 1 and ci_platform < float(0.96):
             return 1
         else:
             return 0
     
     elif pred == 'fail':
-        if ci_awb == 0 and ci_platform == 0:
-            return 0
-        else:
-            return 1
-
-#-----------------------------------------------------------------------------------------------------#
-# Non - partnership drive
+        return 1
+        
 def predicted_npsp_drive(folder_pth, model):
     platform = [] 
     orders = []
@@ -300,20 +323,20 @@ def predicted_npsp_drive(folder_pth, model):
     cm = pd.DataFrame(list(zip(ids, orders, predicted_value, reason, platform, ci_platform)),
             columns=['TID', 'Photo_ID', 'Predicted_Value', 'Fail_Reason', 
                     'Weighing_Platform', 'Conf_Weighing_Platform'])
+    
+    cm['Recheck_needed'] = [recommend_npsp(pred, platform, ci_platform)
+                                          for pred, platform, ci_platform in zip(cm['Predicted_Value'], cm['Weighing_Platform'],
+                                                                                         cm['Conf_Weighing_Platform'])]
+    
+    column_to_move = cm.pop("Recheck_needed")
+    cm.insert(4, "Recheck_needed", column_to_move)
+    
     return cm
 
-def recommend_npsp(pred, platform, ci_platform):
-    if pred == 'pass':
-        if platform == 1 and ci_platform < float(0.96):
-            return 1
-        else:
-            return 0
-    
-    elif pred == 'fail':
-        return 1
+
 
 #-----------------------------------------------------------------------------------------------------#
-# Non partnershop GSC
+# Non partnership GSC URL
 def predicted_npsp_gcs(df, model5):
     platform = [] 
     ci_platform = []
@@ -382,10 +405,18 @@ def predicted_npsp_gcs(df, model5):
 
             ids.append(df.iloc[i,0])
                 
-
         cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, platform, ci_platform)),
                 columns=['TID', 'Pictures', 'Predicted_Value', 'Fail_Reason', 
                         'Weighing_Platform', 'Conf_Weighing_Platform'])
+
+        # Recheck Recommedation
+        cm['Recheck_needed'] = [recommend_npsp(pred, platform, ci_platform)
+                                      for pred, platform, ci_platform in zip(cm['Predicted_Value'], cm['Weighing_Platform'],
+                                                                                     cm['Conf_Weighing_Platform'])]
+    
+        column_to_move = cm.pop("Recheck_needed")
+        cm.insert(4, "Recheck_needed", column_to_move)
+        
         return cm
     
     except:
@@ -396,6 +427,15 @@ def predicted_npsp_gcs(df, model5):
         cm = pd.DataFrame(list(zip(ids, picture, predicted_value, reason, platform, ci_platform)),
                 columns=['TID', 'Pictures', 'Predicted_Value', 'Fail_Reason', 
                         'Weighing_Platform', 'Conf_Weighing_Platform'])
+        
+        # Recheck Recommedation
+        cm['Recheck_needed'] = [recommend_npsp(pred, platform, ci_platform)
+                                      for pred, platform, ci_platform in zip(cm['Predicted_Value'], cm['Weighing_Platform'],
+                                                                                     cm['Conf_Weighing_Platform'])]
+    
+        column_to_move = cm.pop("Recheck_needed")
+        cm.insert(4, "Recheck_needed", column_to_move)
+        
         return cm
     
 
