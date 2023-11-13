@@ -52,20 +52,20 @@ def predicted_lzd_gcs(df,model3):
                     ci_cls4.append(float(conf))
 
                 # add reason of fail
-                if functions.unique(n) == [0]:
+                if functions.unique(cls4) == [0]:
                     reason.append('strange stuffs')
     
-                elif functions.unique(n) == [1] or functions.unique(n) == [2]:
+                elif functions.unique(cls4) == [1] or functions.unique(cls4) == [2]:
                     reason.append('no awb')
     
                 else:
                     reason.append('')
 
                 # add predict value
-                if functions.unique(n) == [0, 1] or functions.unique(n) == [0, 2]:
+                if functions.unique(cls4) == [0, 1] or functions.unique(cls4) == [0, 2]:
                     predicted_value.append('pass')
                 
-                elif functions.unique(n) == [0,1,2]:
+                elif functions.unique(cls4) == [0,1,2]:
                     predicted_value.append('pass')
     
                 else:
