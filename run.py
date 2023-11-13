@@ -12,19 +12,7 @@ pd.options.display.max_columns = 21
 
 # v3: 0: 'awb', 1: 'weighing-platform-bulky', 2: 'weighing-platform-small'
 
-# Recheck Recommendation Function for LZD tool
-def recommend_lzd(pred, ci_awb, platform, ci_platform):
-    if pred == 'pass':
-        if ci_awb < float(0.87):
-            return 1
-        elif platform == 1 and ci_platform < float(0.96):
-            return 1
-        else:
-            return 0
-    
-    elif pred == 'fail':
-        return 1
-
+# LZD-GCS
 def predicted_lzd_gcs(df,model3):
     awb = []
     ci_awb = []
@@ -112,9 +100,9 @@ def predicted_lzd_gcs(df,model3):
                              'Weighing_Platform', 'Conf_Weighing_Platform'])
 
         # Recheck Recommendation
-        cm['Recheck_needed'] = [recommend_lzd(pred, ci_awb, platform, ci_platform)
-                                      for pred, ci_awb, platform, ci_platform in zip(output['Predicted_Value'], output['Conf_AWB'],
-                                                                                      output['Weighing_Platform'], output['Conf_Weighing_Platform'])]
+        cm['Recheck_needed'] = [functions.recommend_lzd(pred, ci_awb, platform, ci_platform)
+                                      for pred, ci_awb, platform, ci_platform in zip(cm['Predicted_Value'], cm['Conf_AWB'],
+                                                                                      cm['Weighing_Platform'], cm['Conf_Weighing_Platform'])]
 
         column_to_move = cm.pop("Recheck_needed")
         cm.insert(4, "Recheck_needed", column_to_move)
@@ -130,7 +118,7 @@ def predicted_lzd_gcs(df,model3):
                              'Weighing_Platform', 'Conf_Weighing_Platform'])
 
         # Recheck Recommendation
-        cm['Recheck_needed'] = [recommend_lzd(pred, ci_awb, platform, ci_platform)
+        cm['Recheck_needed'] = [functions.recommend_lzd(pred, ci_awb, platform, ci_platform)
                                       for pred, ci_awb, platform, ci_platform in zip(cm['Predicted_Value'], cm['Conf_AWB'],
                                                                                       cm['Weighing_Platform'], cm['Conf_Weighing_Platform'])]
 
@@ -230,7 +218,7 @@ def predicted_lzd_drive(folder_pth, model):
                         'Weighing_Platform', 'Conf_Weighing_Platform'])
     
     # Recheck Recommendation
-    cm['Recheck_needed'] = [recommend_lzd(pred, ci_awb, platform, ci_platform)
+    cm['Recheck_needed'] = [functions.recommend_lzd(pred, ci_awb, platform, ci_platform)
                                   for pred, ci_awb, platform, ci_platform in zip(cm['Predicted_Value'], cm['Conf_AWB'],
                                                                                   cm['Weighing_Platform'], cm['Conf_Weighing_Platform'])]
 
@@ -324,7 +312,7 @@ def predicted_npsp_drive(folder_pth, model):
             columns=['TID', 'Photo_ID', 'Predicted_Value', 'Fail_Reason', 
                     'Weighing_Platform', 'Conf_Weighing_Platform'])
     
-    cm['Recheck_needed'] = [recommend_npsp(pred, platform, ci_platform)
+    cm['Recheck_needed'] = [functions.recommend_npsp(pred, platform, ci_platform)
                                           for pred, platform, ci_platform in zip(cm['Predicted_Value'], cm['Weighing_Platform'],
                                                                                          cm['Conf_Weighing_Platform'])]
     
@@ -410,7 +398,7 @@ def predicted_npsp_gcs(df, model5):
                         'Weighing_Platform', 'Conf_Weighing_Platform'])
 
         # Recheck Recommedation
-        cm['Recheck_needed'] = [recommend_npsp(pred, platform, ci_platform)
+        cm['Recheck_needed'] = [functions.recommend_npsp(pred, platform, ci_platform)
                                       for pred, platform, ci_platform in zip(cm['Predicted_Value'], cm['Weighing_Platform'],
                                                                                      cm['Conf_Weighing_Platform'])]
     
@@ -429,7 +417,7 @@ def predicted_npsp_gcs(df, model5):
                         'Weighing_Platform', 'Conf_Weighing_Platform'])
         
         # Recheck Recommedation
-        cm['Recheck_needed'] = [recommend_npsp(pred, platform, ci_platform)
+        cm['Recheck_needed'] = [functions.recommend_npsp(pred, platform, ci_platform)
                                       for pred, platform, ci_platform in zip(cm['Predicted_Value'], cm['Weighing_Platform'],
                                                                                      cm['Conf_Weighing_Platform'])]
     
