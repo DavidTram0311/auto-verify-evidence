@@ -229,17 +229,7 @@ def predicted_lzd_drive(folder_pth, model):
     
 
 #-----------------------------------------------------------------------------------------------------#
-# Non - partnership drive
-def recommend_npsp(pred, platform, ci_platform):
-    if pred == 'pass':
-        if platform == 1 and ci_platform < float(0.96):
-            return 1
-        else:
-            return 0
-    
-    elif pred == 'fail':
-        return 1
-        
+# Non - partnership drive    
 def predicted_npsp_drive(folder_pth, model):
     platform = [] 
     orders = []
@@ -320,7 +310,6 @@ def predicted_npsp_drive(folder_pth, model):
     cm.insert(4, "Recheck_needed", column_to_move)
     
     return cm
-
 
 
 #-----------------------------------------------------------------------------------------------------#
