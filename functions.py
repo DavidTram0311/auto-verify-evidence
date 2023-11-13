@@ -43,11 +43,23 @@ def m_dict_3(cls, ci):
     
     return my_dict
 
+# Recheck Recommendation of LZD tool
 def recommend_lzd(pred, ci_awb, platform, ci_platform):
     if pred == 'pass':
         if ci_awb < float(0.87):
             return 1
         elif platform == 1 and ci_platform < float(0.96):
+            return 1
+        else:
+            return 0
+    
+    elif pred == 'fail':
+        return 1
+
+# Recheck Recommendation of Non-psp tool
+def recommend_npsp(pred, platform, ci_platform):
+    if pred == 'pass':
+        if platform == 1 and ci_platform < float(0.96):
             return 1
         else:
             return 0
