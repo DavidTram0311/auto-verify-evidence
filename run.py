@@ -71,7 +71,7 @@ def predicted_lzd_gcs(df,model3):
                 else:
                     predicted_value.append('fail')
     
-            # Input class and confident interval  
+            # Input class and confident score  
             model4_dict = functions.m_dict_3(cls4, ci_cls4)
 
             # Add appearance value (0: no or 1: yes) and confident score of weighing platform 
@@ -163,9 +163,7 @@ def predicted_lzd_drive(folder_pth, model):
                 for box in results[0].boxes:
                     cls = box.cls
                     ci = box.conf
-
-                    # Do not accept awb and weighing platform of confident interval of awb and weighing
-                    # platform less than 64% and 70% respectively.
+                    # Append class value and confident score of awb and 2 platform
                     cls4.append(int(cls))
                     ci_cls4.append(float(ci))
 
@@ -189,7 +187,7 @@ def predicted_lzd_drive(folder_pth, model):
                 else:
                     predicted_value.append('fail')
 
-            # Input class and confident interval                   
+            # Input class and confident score                   
             model4_dict = functions.m_dict_3(cls4, ci_cls4)
  
             if model4_dict[0] > float(0):
@@ -282,7 +280,7 @@ def predicted_npsp_drive(folder_pth, model):
                 else:
                     predicted_value.append('fail')
 
-            # Input class and confident interval
+            # Input class and confident score
             model4_dict = functions.m_dict_3(cls4, ci_cls4)
 
             # Add appearance value (0: no or 1: yes) and confident score of weighing platform
@@ -366,7 +364,7 @@ def predicted_npsp_gcs(df, model5):
                 else:
                     predicted_value.append('fail')
 
-            # Input class and confident interval
+            # Input class and confident score
             model4_dict = functions.m_dict_3(cls4, ci_cls4)
 
             # Add appearance value (0: no or 1: yes) and confident score of weighing platform 
